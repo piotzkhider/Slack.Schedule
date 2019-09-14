@@ -42,12 +42,12 @@ exports.lambdaHandler = async (event, context) => {
     At: () => P.string('at'),
     Eof: () => P.eof,
     Message: () => {
-      let val = P.regex(/^([\s\S]+)\s+at\s+((1[0-2]|0?[1-9])(:([0-5]\d))?[ap][m]|([01]?\d|2[0-3]):[0-5]\d)$/i, 1).tryParse(body.text);
+      let val = P.regex(/^([\s\S]+)\s+at\s+((1[0-2]|0?[1-9])(:([0-5]\d))?[ap][m]|([01]\d|2[0-3]):[0-5]\d)$/i, 1).tryParse(body.text);
       return P.string(val).node('message');
     },
     Time: r =>
       P.seqMap(
-        r.At, r.Whitespace, P.regex(/((1[0-2]|0?[1-9])(:([0-5]\d))?[ap][m]|([01]?\d|2[0-3]):[0-5]\d)/i), r.Eof,
+        r.At, r.Whitespace, P.regex(/((1[0-2]|0?[1-9])(:([0-5]\d))?[ap][m]|([01]\d|2[0-3]):[0-5]\d)/i), r.Eof,
         (_1, _2, _3) => _3
       ).node('time'),
   });
@@ -133,7 +133,7 @@ exports.lambdaHandler = async (event, context) => {
 
 const validate = (text) => {
   try {
-    P.regex(/^([\s\S]+)\s+at\s+((1[0-2]|0?[1-9])(:([0-5]\d))?[ap][m]|([01]?\d|2[0-3]):[0-5]\d)$/i, 1).tryParse(text);
+    P.regex(/^([\s\S]+)\s+at\s+((1[0-2]|0?[1-9])(:([0-5]\d))?[ap][m]|([01]\d|2[0-3]):[0-5]\d)$/i, 1).tryParse(text);
     return true
   } catch (err) {
     console.error(err);

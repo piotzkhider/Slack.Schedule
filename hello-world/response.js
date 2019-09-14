@@ -10,7 +10,7 @@ exports.IncorrectFormatResponse = {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: "*Oops! Your message is not in the correct format*\nEx:\n`/schedule` Happy Birthday! at 11:59pm\n`/schedule` Happy Birthday! at 23:59"
+              text: "*Oops! Your message is not in the correct format*\nEx:\n`/schedule` Happy Birthday! at 11:59pm\n`/schedule` Happy Birthday! at 03:20"
             },
           }
         ]
