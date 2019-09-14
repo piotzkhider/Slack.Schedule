@@ -1,6 +1,8 @@
 const qs = require('qs');
 const axios = require('axios');
 const {WebClient} = require('@slack/web-api');
+const response = require('./response');
+const {Verify} = require('./utils');
 
 const web = new WebClient(process.env.SLACK_TOKEN);
 
@@ -19,6 +21,10 @@ const web = new WebClient(process.env.SLACK_TOKEN);
 exports.lambdaHandler = async (event, context) => {
   const body = qs.parse(event.body);
   const payload = JSON.parse(body.payload);
+
+  if (!Verify(payload.token)) {
+    return response.UnverifiedResponse
+  }
 
   try {
     await web.chat.deleteScheduledMessage({

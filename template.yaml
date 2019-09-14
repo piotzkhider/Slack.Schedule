@@ -10,6 +10,7 @@ Globals:
   Function:
     Environment:
       Variables:
+        VERIFICATION_TOKEN: REPLACE_THIS_WITH_YOUR_VERIFICATION_TOKEN
         SLACK_TOKEN: REPLACE_THIS_WITH_YOUR_SLACK_TOKEN
         TZ: REPLACE_THIS_WITH_YOUR_TIME_ZONE
     Timeout: 3

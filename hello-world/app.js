@@ -2,6 +2,8 @@ const P = require('parsimmon');
 const R = require('ramda');
 const qs = require('qs');
 const {WebClient} = require('@slack/web-api');
+const response = require('./response');
+const {Verify} = require('./utils');
 
 const web = new WebClient(process.env.SLACK_TOKEN);
 
@@ -22,8 +24,12 @@ exports.lambdaHandler = async (event, context) => {
 
   const body = qs.parse(event.body);
 
+  if (!Verify(body.token)) {
+    return response.UnverifiedResponse
+  }
+
   if (!validate(body.text)) {
-    return IncorrectFormatResponse
+    return response.IncorrectFormatResponse
   }
 
   const CLI = P.createLanguage({
@@ -51,7 +57,7 @@ exports.lambdaHandler = async (event, context) => {
     parsed = CLI.Expression.tryParse(body.text);
   } catch (err) {
     console.error(err);
-    return IncorrectFormatResponse
+    return response.IncorrectFormatResponse
   }
 
   const message = parsed.message;
@@ -92,7 +98,25 @@ exports.lambdaHandler = async (event, context) => {
                       text: "Cancel"
                     },
                     value: resp.scheduled_message_id,
-                    style: 'danger'
+                    style: 'danger',
+                    confirm: {
+                      title: {
+                        type: "plain_text",
+                        text: "Are you sure?"
+                      },
+                      text: {
+                        type: "plain_text",
+                        text: "This message will be canceled."
+                      },
+                      deny: {
+                        type: "plain_text",
+                        text: "No"
+                      },
+                      confirm: {
+                        type: "plain_text",
+                        text: "Yes"
+                      }
+                    }
                   }
                 ]
               }
@@ -115,25 +139,4 @@ const validate = (text) => {
     console.error(err);
     return false
   }
-};
-
-const IncorrectFormatResponse = {
-  statusCode: 200,
-  body: JSON.stringify({
-    response_type: 'ephemeral',
-    attachments: [
-      {
-        color: '#e61b42',
-        blocks: [
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: "*Oops! Your message is not in the correct format*\nEx:\n`/schedule` Happy Birthday! at 11:59pm\n`/schedule` Happy Birthday! at 23:59"
-            },
-          }
-        ]
-      }
-    ]
-  })
 };
