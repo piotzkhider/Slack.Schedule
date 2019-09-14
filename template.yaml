@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  schedule
+
+  Sample SAM Template for schedule
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Environment:
+      Variables:
+        SLACK_TOKEN: REPLACE_THIS_WITH_YOUR_SLACK_TOKEN
+        TZ: REPLACE_THIS_WITH_YOUR_TIME_ZONE
+    Timeout: 3
+
+Resources:
+  ScheduleFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello-world/
+      Handler: app.lambdaHandler
+      Runtime: nodejs10.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /schedule
+            Method: post
+
+  CancelFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello-world/
+      Handler: cancel.lambdaHandler
+      Runtime: nodejs10.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /cancel
+            Method: post
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  ScheduleApi:
+    Description: "API Gateway endpoint URL for Prod stage for Schedule function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/schedule/"
+  ScheduleFunction:
+    Description: "Schedule Lambda Function ARN"
+    Value: !GetAtt ScheduleFunction.Arn
+  ScheduleFunctionIamRole:
+    Description: "Implicit IAM Role created for Schedule function"
+    Value: !GetAtt ScheduleFunctionRole.Arn
+  CancelApi:
+    Description: "API Gateway endpoint URL for Prod stage for Cancel function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/cancel/"
+  CancelFunction:
+    Description: "Cancel Lambda Function ARN"
+    Value: !GetAtt CancelFunction.Arn
+  CancelFunctionIamRole:
+    Description: "Implicit IAM Role created for Cancel function"
+    Value: !GetAtt CancelFunctionRole.Arn
+
