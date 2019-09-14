@@ -1,6 +1,12 @@
-# schedule
+<p align="center">
+  <a href="https://github.com/piotzkhider/squealer">
+    <img alt="squealer" src="https://user-images.githubusercontent.com/7950487/64909458-6e9ddc80-d747-11e9-8a7b-7155141dcc8a.png" width="365px">
+  </a>
+</p>
 
-Send scheduled  messages in Slack
+<h2 align="center">
+  Slack.Schedule - Send scheduled messages in Slack
+</h2>
 
 ## Requirements
 
